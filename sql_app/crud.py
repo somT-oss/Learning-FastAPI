@@ -28,3 +28,15 @@ def create_user(db: Session, user: schema.UserCreate):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+# Return user blogs with a limit of 100 blogs
+def get_blogs(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(model.Blog).offset(skip).limit(limit).all()
+
+# Creates user blogs with the respective user_id when passed as an arguement
+def create_blog(db: Session, blog: schema.BlogCreate, user_id: int):
+    db_blog = model.Blog(**blog.dict(), owner_id=user_id)
+    db.add(db_blog)
+    db.commit()
+    db.refresh(db_blog)
+    return db_blog
