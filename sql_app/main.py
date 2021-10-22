@@ -10,7 +10,7 @@ app = FastAPI()
 
 # Dependency
 def get_db():
-    db = SessionLocal
+    db = SessionLocal()
     try:
         yield db
     finally:
@@ -18,7 +18,7 @@ def get_db():
 
 @app.post("/users/create/", response_model=schema.UserCreate)
 def create_user(user: schema.UserCreate, db: Session = Depends(get_db)):
-    db_user = crud.get_user_by_email(db, email=user.email)
+    db_user = crud.get_user_by_email(db, user_email=user.email)
     if db_user:
         return HTTPException(status_code=400, detail="This email has a;ready been registered")
     else:
